@@ -11,44 +11,91 @@ public class client {
 
 
         // stream for connect
+				Socket s = null;
         ObjectOutputStream oos = null;
         ObjectInputStream ois = null;
 
-        Socket s = null;
-        // todo connect server--------------------
-        try{
-					int first_port=-1;
-					Scanner scan = new Scanner(System.in);
-					System.out.println("first_port?10100,10200,...");
-					first_port=scan.nextInt();
-            s = new Socket("localhost",first_port);
+				Socket ls = null;
+        ObjectOutputStream loos = null;
+        ObjectInputStream lois = null;
+				int first_port=10000;
 
-            OutputStream os = s.getOutputStream();
-            oos = new ObjectOutputStream(os);
+				int login_port=0;
+				int room_port=0;
+				try{
+						//Scanner scan = new Scanner(System.in);
+						//System.out.println("first_port?10100,10200,...");
+						//first_port=scan.nextInt();
+						System.out.println("connect:first_port="+first_port);
+	          ls = new Socket("localhost",first_port);
+						System.out.println("connected:first_port="+first_port);
+	          OutputStream los = ls.getOutputStream();
+	          loos = new ObjectOutputStream(los);
+	          InputStream lis = ls.getInputStream();
+	          lois = new ObjectInputStream(lis);
 
-            InputStream is = s.getInputStream();
-            ois = new ObjectInputStream(is);
-        }catch (Exception e){
-            //e.printStackTrace();
-        }finally {
+						transData login_port_obj = (transData)lois.readObject();
+						if(login_port_obj.get_protocol()==85){
+							login_port = login_port_obj.get_port();
+						}
 
-        }
+						s = new Socket("localhost",login_port);
+						OutputStream os = s.getOutputStream();
+						oos = new ObjectOutputStream(os);
+						InputStream is = s.getInputStream();
+	          ois = new ObjectInputStream(is);
 
+	       // TODO Auto-generated method stub
+		       while(true){
+		         	boolean flag = send_login_info("usr_1","pass_1", ois, oos);
 
-        // TODO Auto-generated method stub
-        while(true){
-            boolean flag = send_login_info("usr_1","pass_1", ois, oos);
+			        if(flag) {
+								//login success
+			              break;
+		          }else{
+										//login failed
+		          }
+			 			}
 
-            if(flag) {
-							//login success
-                break;
-            }else{
-							//login failed
-            }
-        }
+		      room_port = choose_room(oos, ois);
+		      System.out.println("main:room_port="+room_port);
+	/*				if(room_port==0){
+					s.close();
+					System.out.println("closed Socket1");
+					first_port = first_port + 100;
+					count = count + 1;
+					System.out.println("2:count="+count);
+					}else{
+						System.out.println("room port != 0");
+					}*/
+				}catch (Exception e){
+					/*if(room_port==0){
+						try{
+							s.close();
+						}catch(Exception ex){
 
-        int room_port = choose_room(oos, ois);
-        System.out.println("main:room_port"+room_port);
+						}finally{
+
+						}
+						System.out.println("closed Socket2");
+						first_port = first_port + 100;
+						count = count + 1;
+						System.out.println("2:count="+count);
+					}else{
+						System.out.println("room port != 0");
+					}
+	            //e.printStackTrace();*/
+	      }finally {
+					//first_port=10100,10200,10300,10400,10500,10600,10700,10800
+				/*	if(first_port>10900){
+						first_port = 10100;
+					}
+					if(count>8){
+						//prevent endless loop
+						System.out.println("cant connect server");
+						System.exit(0);
+					}*/
+	      }
 
         // stream for room
         ObjectOutputStream oos_room = null;
@@ -75,7 +122,7 @@ public class client {
 				try{
 					transData r_data = (transData)ois_room.readObject();
 					if (r_data.get_protocol()==80){
-						System.out.println("Battale start!");
+						System.out.println("Battle start!");
 					}else{
 						System.out.println("cant receive start");
 					}

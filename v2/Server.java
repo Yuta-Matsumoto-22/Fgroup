@@ -15,8 +15,9 @@ public class Server {
 
 
     public static void connect(){
-        int port_1=10100, port_2=10200, port_3=10300, port_4=10400, port_5=10500, port_6=10600, port_7=10700, port_8=10800;
+        int first_port=10000, port_1=10100, port_2=10200, port_3=10300, port_4=10400, port_5=10500, port_6=10600, port_7=10700, port_8=10800;
 
+				ConnectSocket cs = new ConnectSocket(first_port);
         Socket_thread t1 = new Socket_thread(port_1, 1);
         Socket_thread t2 = new Socket_thread(port_2, 2);
         Socket_thread t3 = new Socket_thread(port_3, 3);
@@ -26,6 +27,7 @@ public class Server {
         Socket_thread t7 = new Socket_thread(port_7, 7);
         Socket_thread t8 = new Socket_thread(port_8, 8);
 
+				cs.start();
         t1.start();
         t2.start();
         t3.start();

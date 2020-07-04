@@ -16,7 +16,7 @@ public class Osero{
 				r = scan.nextInt();
 			}
 			while(l>7){
-				System.out.println("Where do you put on?(len)");
+				System.out.println("Where do you put on?(line)");
 				l = scan.nextInt();
 			}
 

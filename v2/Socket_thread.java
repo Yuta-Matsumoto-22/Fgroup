@@ -48,7 +48,7 @@ public class Socket_thread extends Thread{
 
             transData data =(transData)ois.readObject();
             if(data instanceof transData) {
-//                System.out.println(data.get_protocol());
+                System.out.println("read:"+ss.isBound());
                 int protocol_1 = data.get_protocol();
 
                 // check data is for login?
@@ -149,6 +149,7 @@ public class Socket_thread extends Thread{
                 e.printStackTrace();
             }
             System.out.println("thread [ " + String.valueOf(num) + " ] is finished");
+						run_inside();
         }
     }
 
